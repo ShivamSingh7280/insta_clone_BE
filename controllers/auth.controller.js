@@ -35,8 +35,15 @@ const postSignUp = async (request, response) => {
 const postSignIn = async (request, response) => {
 	try {
 		const user = request?.body;
+		const isUserExist = await authServiceInstance.getUserByEmail(user.email);
 
-		const isUserExist = authServiceInstance.getUserByEmail(user.email);
+		const { _id, fullName, email } = isUserExist;
+
+		const userData = {
+			_id,
+			fullName,
+			email,
+		};
 
 		if (!isUserExist) {
 			return response.status(422).json({
@@ -53,7 +60,11 @@ const postSignIn = async (request, response) => {
 			});
 
 			const token = result.token;
-			response.status(200).json({ message: "Signed In Successfully", token });
+			response.status(200).json({
+				message: "Signed In Successfully",
+				userData,
+				token,
+			});
 		} else {
 			response.status(403).json({
 				message: "Credentials doesn't match",

@@ -16,9 +16,11 @@ class authService {
 		return user;
 	};
 
-	getUserByEmail = async (inputEmail) => {
-		const user = await User.findOne({ email: inputEmail });
-		return user;
+	getUserByEmail = (inputEmail) => {
+		return new Promise(async (resolve, reject) => {
+			const user = await User.findOne({ email: inputEmail });
+			resolve(user);
+		});
 	};
 
 	search = async (inputEmail) => {
